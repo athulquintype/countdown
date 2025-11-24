@@ -1,0 +1,64 @@
+#!/bin/bash
+
+duration=$1
+shift
+
+message="Time's up!"
+sound="/System/Library/Sounds/Ping.aiff"
+quiet=0
+progress=0
+endtime=0
+
+for arg in "$@"; do
+  case $arg in
+    -m=*|--message=*) message="${arg#*=}" ;;
+    --sound) sound_flag=1 ;;
+    --quiet) quiet=1 ;;
+    --progress) progress=1 ;;
+    --endtime) endtime=1 ;;
+  esac
+done
+
+if [[ -n "$sound_flag" ]]; then play_sound="afplay $sound"; else play_sound=""; fi
+
+parse_duration() {
+  if [[ $1 =~ ^([0-9]+)s$ ]]; then echo "${BASH_REMATCH[1]}"; return; fi
+  if [[ $1 =~ ^([0-9]+)m$ ]]; then echo "$(( ${BASH_REMATCH[1]} * 60 ))"; return; fi
+  if [[ $1 =~ ^([0-9]+)h$ ]]; then echo "$(( ${BASH_REMATCH[1]} * 3600 ))"; return; fi
+  echo $1
+}
+
+seconds=$(parse_duration "$duration")
+start=$(date +%s)
+end=$((start + seconds))
+
+if [[ $endtime -eq 1 ]]; then
+  echo "Ends at $(date -r $end +'%H:%M:%S')"
+fi
+
+if [[ $quiet -eq 1 ]]; then
+  sleep "$seconds"
+  echo "$message"
+  [[ -n "$play_sound" ]] && $play_sound
+  exit 0
+fi
+
+for ((i=seconds; i>0; i--)); do
+  if [[ $progress -eq 1 ]]; then
+    percent=$(( 100 - (i * 100 / seconds) ))
+    filled=$(( percent / 10 ))
+    bar=$(printf "%${filled}s" | tr ' ' '#')
+    empty=$((10 - filled))
+    rest=$(printf "%${empty}s" | tr ' ' '-')
+    printf "\r[%s%s] %d%%  %ds left" "$bar" "$rest" "$percent" "$i"
+  else
+    printf "\r%ds left" "$i"
+  fi
+  sleep 1
+done
+
+echo
+echo "$message"
+[[ -n "$play_sound" ]] && $play_sound
+
+

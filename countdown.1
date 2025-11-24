@@ -1,0 +1,50 @@
+.TH COUNTDOWN 1 "2025-11-24" "version 2.0.0" "User Commands"
+.SH NAME
+countdown \- simple terminal countdown timer
+.SH SYNOPSIS
+.B countdown
+duration [options]
+.SH DESCRIPTION
+The
+.B countdown
+command runs a timer for the specified duration.  
+Durations can be specified in seconds (10s), minutes (5m), or hours (1h).  
+You can combine the duration with optional flags to customize behavior.
+.SH OPTIONS
+.TP
+.B -m=MSG, --message=MSG
+Display a custom message when the countdown finishes.
+.TP
+.B --sound
+Play a sound when the countdown ends.
+.TP
+.B --quiet
+Suppress live countdown output; only final message is displayed.
+.TP
+.B --progress
+Show a progress bar during the countdown.
+.TP
+.B --endtime
+Show the expected end time of the countdown.
+.TP
+.B -h, --help
+Display this help message.
+.TP
+.B -v, --version
+Display the countdown version.
+.SH EXAMPLES
+.TP
+countdown 10s
+Run a 10-second timer.
+.TP
+countdown 1m --progress
+Show a 1-minute countdown with progress bar.
+.TP
+countdown 30s -m="Break over!"
+Display a custom message when done.
+.TP
+countdown 2m --quiet --sound
+Silent countdown with audio alert.
+.SH AUTHOR
+Athul
+
