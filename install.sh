@@ -14,3 +14,4 @@ sudo cp countdown.1 /usr/local/share/man/man1/
 echo "Countdown installed!"
 echo "Run: countdown 5s"
 echo "Man page: man countdown"
+echo "Changes Here"
